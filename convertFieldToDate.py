@@ -32,7 +32,7 @@ from org.gvsig.tools import ToolsLocator
 from java.lang import Math
 from org.gvsig.fmap.geom import Geometry
 from org.gvsig.fmap.geom import GeometryLocator
-
+from gvsig.libs.toolbox import *
 
 class ConvertFieldToDate(ToolboxProcess):
   def defineCharacteristics(self):
@@ -43,20 +43,32 @@ class ConvertFieldToDate(ToolboxProcess):
     params = self.getParameters()
     self.setUserCanDefineAnalysisExtent(False)
     params.addInputVectorLayer("inputVectorLayer",i18nManager.getTranslation("_Input_Layer"), AdditionalInfoVectorLayer.SHAPE_TYPE_ANY,True)
-    params.addTableField("dateField", i18nManager.getTranslation("_Date_Field"), "inputVectorLayer", True)
+    params.addTableField("dateField1", i18nManager.getTranslation("_Date_Field_1"), "inputVectorLayer", True)
+    params.addTableField("dateField2", i18nManager.getTranslation("_Date_Field_2"), "inputVectorLayer", True)
     params.addFilepath("outputFilePath",i18nManager.getTranslation("_Output_Layer"),False,False,True,[".shp"])
+    params.addBoolean("changeDefaultValue",i18nManager.getTranslation("_Change_default_value"), False)
+    params.addNumericalValue("defaultValue", i18nManager.getTranslation("_Default_value"),99999999, NUMERICAL_VALUE_INTEGER)
+    params.addNumericalValue("changeForValue", i18nManager.getTranslation("_Change_for_value"),19991231, NUMERICAL_VALUE_INTEGER)
+
 
   def processAlgorithm(self):
     params = self.getParameters()
     inputVectorLayer = params.getParameterValueAsVectorLayer("inputVectorLayer").getFeatureStore()
-    dateField = params.getParameterValueAsInt("dateField")
+    dateField1 = params.getParameterValueAsInt("dateField1")
+    dateField2 = params.getParameterValueAsInt("dateField2")
     outputFilePath = params.getParameterValueAsString("outputFilePath")
+
+    #Change default value
+    changeDefaultValue = params.getParameterValueAsBoolean("changeDefaultValue")
+    defaultValue = params.getParameterValueAsString("defaultValue")
+    changeForValue = params.getParameterValueAsString("changeForValue")
+
     
     if outputFilePath == "":
         outputFilePath = gvsig.getTempFile("result_geometries",".shp")
     elif not outputFilePath.endswith('.shp'):
         outputFilePath = outputFilePath+".shp"
-    process(inputVectorLayer,dateField,outputFilePath,self)
+    process(inputVectorLayer,dateField1,dateField2,changeDefaultValue,defaultValue,changeForValue,outputFilePath,self)
     return True
     
 def main(*args):
@@ -81,21 +93,37 @@ def intToDate(field):
 # "/" + subString(toString([FECHAALTA]),4,6) + 
 # "/" + subString(toString([FECHAALTA]),0,4),"dd/MM/yyyy")  
 
-def process(fstore, field,outputFilePath=None,selfStatus=None):
+def process(fstore, field1,field2,changeDefaultValue,defaultValue,changeForValue,outputFilePath=None,selfStatus=None):
     print "process.."
     fset = fstore.getFeatureSet()#lection()
     ft = gvsig.createFeatureType(fstore.getDefaultFeatureType())
-    nameField = ft.get(field).getName()
+    nameField1 = ft.get(field1).getName()
+    nameField2 = ft.get(field2).getName()
+    fields = [field1, field2]
     allFields = [attr.getName() for attr in ft.getAttributeDescriptors()]
     n=0
     while True:
         n += 1
-        newFieldName = nameField+str(n)
-        if newFieldName not in allFields:
+        if len(nameField1)>=10:
+            newFieldName1 = nameField1[:-1]+str(n)
+        else:
+            newFieldName1 = nameField1+str(n)
+        if newFieldName1 not in allFields:
             break
+    n=0
+    while True:
+        n += 1
+        if len(nameField2)>=10:
+            newFieldName2 = nameField2[:-1]+str(n)
+        else:
+            newFieldName2 = nameField2+str(n)
         
-    ft.add(newFieldName,DataTypes.DATE)
-
+        if newFieldName2 not in allFields and newFieldName1 != newFieldName2:
+            break
+            
+    ft.add(newFieldName1,DataTypes.DATE)
+    ft.add(newFieldName2,DataTypes.DATE)
+    
     if outputFilePath is None:
         outputFilePath = gvsig.getTempFile("result",".shp")
     ns = gvsig.createShape(ft,filename=outputFilePath)
@@ -104,7 +132,16 @@ def process(fstore, field,outputFilePath=None,selfStatus=None):
 
     for f in fset:
         nf = ns.getFeatureStore().createNewFeature(f)
-        nf.set(newFieldName, intToDate(f.get(field)))
+        ## Value 1
+        value1 = f.get(field1)
+        if changeDefaultValue is True and str(value1)==str(defaultValue):
+            value1 = changeForValue
+        nf.set(newFieldName1, intToDate(value1))
+        ## Value 2
+        value2 = f.get(field2)
+        if changeDefaultValue is True and str(value2)==str(defaultValue):
+            value2 = changeForValue
+        nf.set(newFieldName2, intToDate(value2))
         ns.getFeatureStore().insert(nf)
     ns.commit()
     gvsig.currentView().addLayer(ns)
