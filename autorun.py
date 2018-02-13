@@ -4,6 +4,9 @@ import gvsig
 from addons.ConvertFieldToDate.convertFieldToDate import ConvertFieldToDate
 from org.gvsig.tools import ToolsLocator
 from java.io import File
+from gvsig import uselib
+uselib.use_plugin("org.gvsig.toolbox")
+
 
 def main(*args):
     selfRegister()
