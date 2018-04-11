@@ -19,7 +19,6 @@ from org.gvsig.fmap.geom.primitive import Polygon, Point
 # Con geometrias normales se quedaria con el getGeometryType()
 from es.unex.sextante.dataObjects import IVectorLayer
 from gvsig.libs.toolbox import ToolboxProcess
-from es.unex.sextante.gui import core
 from es.unex.sextante.gui.core import NameAndIcon
 #from es.unex.sextante.parameters import ParameterDataObject
 #from es.unex.sextante.exceptions import WrongParameterTypeException
@@ -55,8 +54,8 @@ class ConvertFieldToDate(ToolboxProcess):
       params.addNumericalValue("changeForValue", i18nManager.getTranslation("_Change_for_value"),19991231, NUMERICAL_VALUE_INTEGER)
   
       self.addOutputVectorLayer("RESULT_POLYGON", i18nManager.getTranslation("Intersection_polygon"), OutputVectorLayer.SHAPE_TYPE_POLYGON)
-      self.addOutputVectorLayer("RESULT_LINE", i18nManager.getTranslation("Intersection_line"), OutputVectorLayer.SHAPE_TYPE_LINE)
-      self.addOutputVectorLayer("RESULT_POINT", i18nManager.getTranslation("Intersection_point"), OutputVectorLayer.SHAPE_TYPE_POINT)
+      #self.addOutputVectorLayer("RESULT_LINE", i18nManager.getTranslation("Intersection_line"), OutputVectorLayer.SHAPE_TYPE_LINE)
+      #self.addOutputVectorLayer("RESULT_POINT", i18nManager.getTranslation("Intersection_point"), OutputVectorLayer.SHAPE_TYPE_POINT)
 
     def processAlgorithm(self):
       params = self.getParameters()
