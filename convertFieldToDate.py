@@ -1,13 +1,17 @@
 # encoding: utf-8
 
 import gvsig
+import os
+
 from org.gvsig.fmap.dal import DataTypes
 from org.gvsig.fmap.dal import DALLocator
 from org.gvsig.app import ApplicationLocator 
+# encoding: utf-8
+
+import gvsig
 from java.util import Date
 from java.util import Calendar
 from gvsig.libs import gvpy
-import os
 from gvsig import geom
 from org.gvsig.fmap.geom import Geometry
 from org.gvsig.fmap.geom import GeometryLocator
