@@ -6,9 +6,6 @@ import os
 from org.gvsig.fmap.dal import DataTypes
 from org.gvsig.fmap.dal import DALLocator
 from org.gvsig.app import ApplicationLocator 
-# encoding: utf-8
-
-import gvsig
 from java.util import Date
 from java.util import Calendar
 from gvsig.libs import gvpy
