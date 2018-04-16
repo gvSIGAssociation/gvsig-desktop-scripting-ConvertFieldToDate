@@ -52,8 +52,8 @@ class ConvertFieldToDate(ToolboxProcess):
       params.addNumericalValue("changeForValue", i18nManager.getTranslation("_Change_for_value"),19991231, NUMERICAL_VALUE_INTEGER)
   
       self.addOutputVectorLayer("RESULT_POLYGON", i18nManager.getTranslation("Intersection_polygon"), OutputVectorLayer.SHAPE_TYPE_POLYGON)
-      #self.addOutputVectorLayer("RESULT_LINE", i18nManager.getTranslation("Intersection_line"), OutputVectorLayer.SHAPE_TYPE_LINE)
-      #self.addOutputVectorLayer("RESULT_POINT", i18nManager.getTranslation("Intersection_point"), OutputVectorLayer.SHAPE_TYPE_POINT)
+      self.addOutputVectorLayer("RESULT_LINE", i18nManager.getTranslation("Intersection_line"), OutputVectorLayer.SHAPE_TYPE_LINE)
+      self.addOutputVectorLayer("RESULT_POINT", i18nManager.getTranslation("Intersection_point"), OutputVectorLayer.SHAPE_TYPE_POINT)
 
     def processAlgorithm(self):
       params = self.getParameters()
@@ -115,12 +115,36 @@ class ConvertFieldToDate(ToolboxProcess):
               "Result_polygon",
               "RESULT_POLYGON"
             )
+            self.buildOutPutStore(
+              featureType, 
+              SHAPE_TYPE_LINE,
+              "Result_line",
+              "RESULT_LINE"
+            )
+            self.buildOutPutStore(
+              featureType, 
+              SHAPE_TYPE_POINT,
+              "Result_point",
+              "RESULT_POINT"
+            )
         elif self.isLine(flayer.getFeatureStore()):
             output_store = self.buildOutPutStore(
               featureType, 
               SHAPE_TYPE_LINE,
               "Result_line",
               "RESULT_LINE"
+            )
+            self.buildOutPutStore(
+              featureType, 
+              SHAPE_TYPE_POLYGON,
+              "Result_polygon",
+              "RESULT_POLYGON"
+            )
+            self.buildOutPutStore(
+              featureType, 
+              SHAPE_TYPE_POINT,
+              "Result_point",
+              "RESULT_POINT"
             )
         elif self.isPoint(flayer.getFeatureStore()):
             output_store = self.buildOutPutStore(
@@ -129,8 +153,21 @@ class ConvertFieldToDate(ToolboxProcess):
               "Result_point",
               "RESULT_POINT"
             )
+            self.buildOutPutStore(
+              featureType, 
+              SHAPE_TYPE_POLYGON,
+              "Result_polygon",
+              "RESULT_POLYGON"
+            )
+            self.buildOutPutStore(
+              featureType, 
+              SHAPE_TYPE_LINE,
+              "Result_line",
+              "RESULT_LINE"
+            )
         else:
             raise ("Not valid value")
+
 
         
         #output_store.edit()

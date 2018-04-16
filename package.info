@@ -1,11 +1,11 @@
 #
-#Wed Jan 17 04:13:33 CET 2018
+#Fri Apr 13 12:15:44 CEST 2018
 owner=
 code=ConvertFieldToDate
 java-version=j1_7
 official=true
 type=Script
-version=1.0.0-0
+version=1.0.0-4
 state=testing
 operating-system=all
 dependencies=
@@ -13,9 +13,9 @@ sources-url=
 web-url=
 architecture=all
 model-version=1.0.1
-categories=
+categories=Geoprocess
 description=Convert numeric field to date
 owner-url=
-buildNumber=0
+buildNumber=4
 gvSIG-version=2.4.0
 name=ConvertFieldToDate
