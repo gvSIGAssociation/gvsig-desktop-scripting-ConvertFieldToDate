@@ -25,7 +25,7 @@
 
 -->
 	<help>
-		<element name="DESCRIPTION" text="Geoproceso para la transformacion de campos tipo String con fechas en forma yyyymmdd para su transformacion a un campo nuevo de tipo Date. Valores default como por ejemplo '99999999' puedes reemplazarse por una fecha initroducida en el formato anterior. Por ejemplo: '19991231'" description="Descripcion" type="0">
+		<element name="DESCRIPTION" text="Geoproceso para la transformacion de campos tipo Integer con fechas en forma yyyymmdd para su transformacion a un campo nuevo de tipo Date. Valores default como por ejemplo '99999999' puedes reemplazarse por una fecha introducida en el formato anterior. Por ejemplo: '19991231'" description="Descripcion" type="0">
 		</element>
 		<element name="ADDITIONAL_INFO" text="" description="Informacion adicional" type="0">
 		</element>
