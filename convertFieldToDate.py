@@ -1,41 +1,57 @@
 # encoding: utf-8
 
 import gvsig
-import os
-
-from org.gvsig.fmap.dal import DataTypes
-from org.gvsig.fmap.dal import DALLocator
-from org.gvsig.app import ApplicationLocator 
-from java.util import Date
-from java.util import Calendar
+from gvsig.libs.toolbox import ToolboxProcess,NUMERICAL_VALUE_INTEGER,SHAPE_TYPE_POLYGON,SHAPE_TYPE_POINT,SHAPE_TYPE_LINE
 from gvsig.libs import gvpy
 from gvsig import geom
+
+import os
+
+from org.gvsig.andami import PluginsLocator
+from org.gvsig.app import ApplicationLocator 
 from org.gvsig.fmap.geom import Geometry
 from org.gvsig.fmap.geom import GeometryLocator
 from org.gvsig.fmap.geom.aggregate import MultiPrimitive
 from org.gvsig.fmap.geom.primitive import Polygon, Point
-# Con geometrias normales se quedaria con el getGeometryType()
+from org.gvsig.geoprocess.lib.api import GeoProcessLocator
+from org.gvsig.tools import ToolsLocator
+from org.gvsig.fmap.mapcontext import MapContextLocator
+from org.gvsig.fmap.dal import DataTypes
+from org.gvsig.fmap.dal import DALLocator
+
 from es.unex.sextante.dataObjects import IVectorLayer
-from gvsig.libs.toolbox import ToolboxProcess
 from es.unex.sextante.gui.core import NameAndIcon
-#from es.unex.sextante.parameters import ParameterDataObject
-#from es.unex.sextante.exceptions import WrongParameterTypeException
 from es.unex.sextante.additionalInfo import AdditionalInfoVectorLayer
 from es.unex.sextante.outputs import OutputVectorLayer
 
-#from gvsig import logger
-#from gvsig import LOGGER_WARN
-#from es.unex.sextante.additionalInfo import AdditionalInfo
-from org.gvsig.geoprocess.lib.api import GeoProcessLocator
-from org.gvsig.tools import ToolsLocator
-from java.lang import Math
-from org.gvsig.fmap.geom import Geometry
-from org.gvsig.fmap.geom import GeometryLocator
-from gvsig.libs.toolbox import ToolboxProcess,NUMERICAL_VALUE_INTEGER,SHAPE_TYPE_POLYGON,SHAPE_TYPE_POINT,SHAPE_TYPE_LINE
-from java.lang import Integer
-from org.gvsig.fmap.mapcontext import MapContextLocator
+from java.util import Date
+from java.util import Calendar
+from java.lang import Integer,Math
+from java.io import File
 
 class ConvertFieldToDate(ToolboxProcess):
+    def getHelpFile(self):
+        name = "convertfieldtodate"
+        extension = ".xml"
+        locale = PluginsLocator.getLocaleManager().getCurrentLocale()
+        tag = locale.getLanguage()
+        #extension = ".properties"
+
+        helpPath = gvsig.getResource(__file__, "help", name + "_" + tag + extension)
+        if os.path.exists(helpPath):
+            return File(helpPath)
+        #Alternatives
+        alternatives = PluginsLocator.getLocaleManager().getLocaleAlternatives(locale)
+        for alt in alternatives:
+            helpPath = gvsig.getResource(__file__, "help", name + "_" + alt.toLanguageTag() + extension )
+            if os.path.exists(helpPath):
+                return File(helpPath)
+        # More Alternatives
+        helpPath = gvsig.getResource(__file__, "help", name + extension)
+        if os.path.exists(helpPath):
+            return File(helpPath)
+        return None
+        
     def defineCharacteristics(self):
       i18nManager = ToolsLocator.getI18nManager()
       
@@ -46,7 +62,6 @@ class ConvertFieldToDate(ToolboxProcess):
       params.addInputVectorLayer("inputVectorLayer",i18nManager.getTranslation("_Input_Layer"), AdditionalInfoVectorLayer.SHAPE_TYPE_ANY,True)
       params.addTableField("dateField1", i18nManager.getTranslation("_Date_Field_1"), "inputVectorLayer", True)
       params.addTableField("dateField2", i18nManager.getTranslation("_Date_Field_2"), "inputVectorLayer", True)
-      #params.addFilepath("outputFilePath",i18nManager.getTranslation("_Output_Layer"),False,False,True,[".shp"])
       params.addBoolean("changeDefaultValue",i18nManager.getTranslation("_Change_default_value"), False)
       params.addNumericalValue("defaultValue", i18nManager.getTranslation("_Default_value"),99999999, NUMERICAL_VALUE_INTEGER)
       params.addNumericalValue("changeForValue", i18nManager.getTranslation("_Change_for_value"),19991231, NUMERICAL_VALUE_INTEGER)
@@ -168,11 +183,6 @@ class ConvertFieldToDate(ToolboxProcess):
         else:
             raise ("Not valid value")
 
-
-        
-        #output_store.edit()
-        #import pdb
-        #pdb.set_trace()
         dataManager = ApplicationLocator.getManager().getDataTypesManager() 
         self.setRangeOfValues(0, fset.getSize())
         self.getStatus().setTitle("Processing..")
@@ -212,12 +222,7 @@ class ConvertFieldToDate(ToolboxProcess):
 def main(*args):
     process = ConvertFieldToDate()
     process.selfregister("Scripting")
-    #gm = GeoProcessLocator.getGeoProcessManager()
-    # Actualizamos el interface de usuario de la Toolbox
     process.updateToolbox()
-    #layer = gvsig.currentLayer().getFeatureStore()
-    #field = "FECHAALTA"
-    #process(layer, field)
 
 def intToDate(field):
     d = int(str(field)[6:8])
@@ -230,6 +235,3 @@ def intToDate(field):
 # toDate(subString(toString([FECHAALTA]),6,8) +
 # "/" + subString(toString([FECHAALTA]),4,6) + 
 # "/" + subString(toString([FECHAALTA]),0,4),"dd/MM/yyyy")  
-
-            
-            
