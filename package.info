@@ -1,11 +1,11 @@
 #
-#Mon Apr 16 16:29:49 CEST 2018
-owner=
+#Sun Sep 20 19:57:10 CEST 2020
+owner=gvSIG Association
 code=ConvertFieldToDate
 java-version=j1_7
 official=true
 type=Script
-version=1.0.0-5
+version=1.0.0-6
 state=testing
 operating-system=all
 dependencies=
@@ -16,6 +16,6 @@ model-version=1.0.1
 categories=Geoprocess
 description=Convert Integer field in format yyyymmdd to date
 owner-url=
-buildNumber=5
-gvSIG-version=2.4.0
+buildNumber=6
+gvSIG-version=2.5.1
 name=ConvertFieldToDate
